@@ -41,11 +41,11 @@ find their way around.**
 
 ## Step 2: Create a folder structure
 
-Download the [template](downloads/template.zip). In `PROJECTCODE_project/` replace `projectcode` by `bbwdp` and move
-the files from `BBWDP_data` into the right folder.
+Download the [template](downloads/template.zip) and rename `PROJECTCODE_project/` to `BBWDP_project/`. In it, replace
+`projectcode` by `bbwdp` and move the files from `BBWDP_data` into the right folder.
 
 ```
-BBWDP_data/
+BBWDP_project/
 ├── 01_bbwdp_data/
 │   ├── raw/              data as collected – never edit
 │   └── processed/        data made from raw data by a script
@@ -55,7 +55,7 @@ BBWDP_data/
 
 ## Step 3: Rename and move the files
 
-Give at least three files a name that follows this convention, and move them to the right folder:
+Give at least three files a name that follows this convention:
 
 ```
 bbwdp_description_vNN.ext
@@ -88,13 +88,13 @@ old names, so they need updating after renaming. **You don't have to do that now
 
 ## Step 4: Check your work
 
-Open the [interactive version](index.html), go to step 4 and select your newly organized `BBWDP_data` folder.
+Open the [interactive version](index.html), go to step 4 and select your newly organized `BBWDP_project` folder.
 Your files stay on your computer.
 
 ## Step 5: Compare with the model solution
 
 ```
-BBWDP_data/
+BBWDP_project/
 ├── README.txt
 ├── 01_bbwdp_data/
 │   ├── processed/
@@ -118,11 +118,11 @@ BBWDP_data/
 
 ## Optional extra: write a README
 
-Copy `README-template.txt` from the [template](downloads/template.zip) to the top of `BBWDP_data`,
+Copy `README-template.txt` from the [template](downloads/template.zip) to the top of `BBWDP_project`,
 rename it to `README.txt` and fill it in:
 
 - **General information:** the study title, a short description, the authors and a contact;
-- **Organization:** the folder structure of *your* `BBWDP_data` folder (replace the example), the file naming
+- **Organization:** the folder structure of *your* `BBWDP_project` folder (replace the example), the file naming
   convention you used, and the file formats.
 
 Compare yours with the README in [solution.zip](downloads/solution.zip).
