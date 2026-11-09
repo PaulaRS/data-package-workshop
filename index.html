@@ -181,7 +181,7 @@
 <main>
 
   <section class="card" id="intro">
-    <h2>The study</h2>
+    <h2>Instructions</h2>
     <p>In the <strong>Bern-Basel 2021 wearable device pilot</strong> (project code <code>BBWDP</code>), 20 children receiving chemotherapy wore two wearable devices, the CORE® and the Everion®, for 14 days. Both devices measured core temperature every minute, so that fever could be detected early.</p>
     <p>You get part of the published data: device data from two patients, the clinical data for all patients (as exported, and a cleaned version without double entries), three data dictionaries that describe the variables, and two R scripts: one that exported the device data and one that cleaned the clinical data. All files sit together in one folder, <code>BBWDP_data</code>, with names like <code>CORE_data.patient_01.csv</code> and <code>script.R</code>. <strong>Your job is to organise them into a clear structure with a consistent naming convention, so that anyone can find their way around.</strong></p>
     <p class="source-note">The data are real and openly published under CC BY 4.0 (<a href="https://doi.org/10.6084/m9.figshare.22507342">Farner et al., 2024, figshare</a>; <a href="https://doi.org/10.1007/s00520-024-08366-w">Koenig et al., 2024, <em>Supportive Care in Cancer</em></a>). The published files are used unchanged; only a subset is used, and the export script was renamed. The cleaned clinical file and its cleaning script were made for this workshop.</p>
@@ -199,7 +199,8 @@
     <h2>Download and explore the files</h2>
     <ol>
       <li>Download <a href="downloads/BBWDP_data.zip" download>BBWDP_data.zip</a> and unzip it.</li>
-      <li>Open the folder <code>BBWDP_data</code> and look at the eleven files without opening the files. Which ones do you think are <strong>raw data</strong>, <strong>processed data</strong>, <strong>documentation</strong> or <strong>code</strong>?</li>
+      <li>Open the folder <code>BBWDP_data</code> and look at the eleven files without opening the files.</li>
+      <li>Which ones do you think are raw data, processed data, documentation or code? Discuss with your neighbor.</li>
       <li>Would a new colleague understand these names without help? What would you improve?</li>
     </ol>
     <label class="done-toggle"><input type="checkbox" data-step="1"> I've finished this step</label>
@@ -228,7 +229,7 @@
   <!-- STEP 3 -->
   <section class="card step" id="step-3">
     <div class="step-label">Step 3</div>
-    <h2>Rename and move the files</h2>
+    <h2>Rename the files</h2>
     <p>Give at least three files a name that follows this convention:</p>
     <p style="text-align:center;font-size:1.1rem"><code>bbwdp_description_vNN.ext</code></p>
     <table>

@@ -5,7 +5,7 @@
 
 ⏱ 20 minutes (+5 optional) · 📊 Based on real open data (CC BY 4.0) · ✍️ Author: Paula Ramos-Silva
 
-## The study
+## Instructions
 
 In the **Bern-Basel 2021 wearable device pilot** (project code `BBWDP`), 20 children receiving chemotherapy
 wore two wearable devices, the CORE® and the Everion®, for 14 days. Both devices measured core temperature
@@ -35,9 +35,9 @@ find their way around.**
 ## Step 1: Download and explore the files
 
 1. Download [BBWDP_data.zip](downloads/BBWDP_data.zip) and unzip it.
-2. Open the folder `BBWDP_data` and look at the eleven files without opening the files. Which ones do you think
-   are **raw data**, **processed data**, **documentation** or **code**?
-3. Would a new colleague understand these names without help? What would you improve?
+2. Open the folder `BBWDP_data` and look at the eleven files without opening the files.
+3. Which ones do you think are raw data, processed data, documentation or code? Discuss with your neighbor.
+4. Would a new colleague understand these names without help? What would you improve?
 
 ## Step 2: Create a folder structure
 
@@ -53,7 +53,7 @@ BBWDP_project/
 └── 03_bbwdp_docs/        documentation: data dictionaries
 ```
 
-## Step 3: Rename and move the files
+## Step 3: Rename the files
 
 Give at least three files a name that follows this convention:
 
