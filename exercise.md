@@ -115,7 +115,7 @@ BBWDP_project/
     └── bbwdp_data-dictionary-everion_v01.csv
 ```
 
-**Reflect:** Where did your choices differ? Which convention would you agree on with your team *before* a project starts?
+**Reflect:** Where did your choices differ?
 
 ## Optional extra: write a README
 
