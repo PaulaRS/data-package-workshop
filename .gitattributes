@@ -1,0 +1,3 @@
+# Keep files in materials/ byte-for-byte identical (the web checker matches files by content)
+materials/** -text
+downloads/** binary

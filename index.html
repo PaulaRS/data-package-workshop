@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tidy up a study folder and create a package</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400..700&family=IBM+Plex+Sans:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  /* Palette matches the "data packages" workshop deck (LUMC-inspired blues) */
+  :root {
+    --navy: #0F1E3D;       /* headings, header background */
+    --navy-2: #132A5A;
+    --ink: #4A5568;        /* body text */
+    --muted: #6B7689;
+    --paper: #F6F8FB;      /* page background */
+    --card: #ffffff;
+    --line: #DCE6F7;
+    --accent: #1E3D7B;     /* links, labels, buttons */
+    --accent-2: #2F5AA8;
+    --accent-3: #5B8FE0;
+    --accent-soft: #EDF2FB;
+    --pale: #9DB4E0;
+    --pale-2: #C2CDE3;
+    --gold: #FFD27A;       /* highlight */
+    --ok: #2e7d4f;
+    --ok-soft: #e6f4ec;
+    --warn: #8a5a00;
+    --warn-soft: #fff4dc;
+    --err: #b3261e;
+    --err-soft: #fbe9e7;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --sans: "IBM Plex Sans", Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font: 17px/1.6 var(--sans);
+  }
+  strong { color: var(--navy); }
+  header {
+    background: var(--navy); color: var(--pale-2); padding: 52px 20px 44px;
+  }
+  header .inner, main { max-width: 860px; margin: 0 auto; }
+  header .rule { width: 72px; height: 6px; background: var(--pale); margin-bottom: 14px; }
+  header .eyebrow { margin: 0 0 10px; font-size: .82rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--pale); }
+  .title-row { display: flex; align-items: center; gap: 20px; margin-bottom: 10px; }
+  .title-row .logo { flex: none; width: 76px; height: 76px; background: #fff; padding: 5px; border-radius: 6px; }
+  .title-row h1 { margin: 0 !important; }
+  @media (max-width: 600px) { .title-row .logo { width: 56px; height: 56px; } }
+  header h1 { margin: 0 0 10px; font: 600 2.4rem/1.15 var(--serif); color: #F6F8FB; }
+  header p { margin: 0; max-width: 640px; }
+  .meta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; font-size: .9rem; }
+  .meta span { background: var(--navy-2); color: var(--pale-2); padding: 4px 12px; border-radius: 99px; border: 1px solid #1E3D7B; }
+
+  .progress-wrap { position: sticky; top: 0; z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); }
+  .progress-inner { max-width: 860px; margin: 0 auto; padding: 10px 20px; display: flex; align-items: center; gap: 14px; font-size: .9rem; color: var(--muted); }
+  .bar { flex: 1; height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .bar > div { height: 100%; width: 0; background: var(--accent-2); transition: width .3s; }
+
+  main { padding: 28px 20px 80px; }
+  h2 { font: 600 1.6rem/1.25 var(--serif); margin: 0 0 6px; color: var(--navy); }
+  h3 { font-size: 1.05rem; margin: 22px 0 6px; color: var(--navy); }
+  code, .mono { font-family: var(--mono); font-size: .84em; background: var(--accent-soft); color: var(--navy); padding: 1px 5px; border-radius: 4px; }
+  a { color: var(--accent-2); }
+
+  section.card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 26px 28px; margin: 22px 0;
+  }
+  .step-label { font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  .time { color: var(--muted); font-size: .9rem; }
+
+  .downloads { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 14px; }
+  .dl {
+    display: block; text-decoration: none; color: var(--ink); border: 1px solid var(--line);
+    border-radius: 10px; padding: 16px; background: var(--paper); transition: border-color .15s, transform .15s;
+  }
+  .dl:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .dl strong { display: block; color: var(--accent); }
+  .dl small { color: var(--muted); }
+  .dl .btn { display: inline-block; margin-top: 10px; font-size: .88rem; font-weight: 600; }
+
+  details { border: 1px solid var(--line); border-radius: 8px; margin: 12px 0; background: var(--paper); }
+  details > summary { cursor: pointer; padding: 10px 14px; font-weight: 600; list-style: none; }
+  details > summary::before { content: "▸ "; color: var(--accent); }
+  details[open] > summary::before { content: "▾ "; }
+  details > div { padding: 0 16px 12px; }
+  details.hint > summary { color: var(--warn); }
+  details.answer > summary { color: var(--accent); }
+
+  pre.tree {
+    font-family: var(--mono); font-size: .82rem; line-height: 1.55; background: var(--navy); color: var(--line);
+    padding: 16px 18px; border-radius: 8px; overflow-x: auto; margin: 10px 0;
+  }
+  pre.tree .dir { color: var(--gold); font-weight: 600; }
+
+  table { border-collapse: collapse; width: 100%; font-size: .93rem; margin: 10px 0; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--accent-soft); }
+
+  .done-toggle {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; padding: 8px 14px;
+    border: 1px solid var(--line); border-radius: 99px; cursor: pointer; user-select: none; font-size: .93rem;
+  }
+  .done-toggle input { width: 18px; height: 18px; accent-color: var(--ok); }
+  section.card.is-done { border-color: #b9dcc7; }
+  section.card.is-done .done-toggle { background: var(--ok-soft); border-color: #b9dcc7; }
+
+  /* name checker */
+  .namecheck input {
+    width: 100%; font-family: var(--mono); font-size: .95rem; padding: 10px 12px;
+    border: 2px solid var(--line); border-radius: 8px; outline: none;
+  }
+  .namecheck input:focus { border-color: var(--accent); }
+  .namecheck input.good { border-color: var(--ok); }
+  .namecheck input.bad { border-color: var(--err); }
+  .feedback { margin: 8px 0 0; padding: 0; list-style: none; font-size: .93rem; }
+  .feedback li { padding: 3px 0 3px 26px; position: relative; }
+  .feedback li::before { position: absolute; left: 4px; }
+  .feedback li.ok { color: var(--ok); } .feedback li.ok::before { content: "✔"; }
+  .feedback li.bad { color: var(--err); } .feedback li.bad::before { content: "✖"; }
+  .feedback li.warn { color: var(--warn); } .feedback li.warn::before { content: "!"; font-weight: 700; left: 8px; }
+
+  /* folder checker */
+  .picker {
+    display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
+    border: 2px dashed var(--pale); border-radius: 12px; padding: 28px 16px; background: var(--accent-soft);
+  }
+  .picker label.button {
+    background: var(--accent); color: #fff; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;
+  }
+  .picker label.button:hover { background: var(--accent-2); }
+  .picker input { display: none; }
+  .picker small { color: var(--muted); }
+  #results { margin-top: 18px; }
+  .score { font-size: 1.1rem; font-weight: 700; margin: 0 0 10px; }
+  .result { border-radius: 8px; padding: 12px 14px; margin: 10px 0; border-left: 5px solid; }
+  .result.ok { background: var(--ok-soft); border-color: var(--ok); }
+  .result.warn { background: var(--warn-soft); border-color: var(--warn); }
+  .result.error { background: var(--err-soft); border-color: var(--err); }
+  .result.info { background: var(--accent-soft); border-color: var(--accent-3); }
+  .result h4 { margin: 0; font-size: 1rem; }
+  .result ul { margin: 6px 0 0; padding-left: 20px; font-size: .92rem; }
+  .result code { background: rgba(255,255,255,.7); }
+
+  footer { text-align: center; color: var(--muted); font-size: .85rem; line-height: 1.7; padding: 0 20px 40px; }
+  .source-note { font-size: .9rem; color: var(--muted); border-left: 3px solid var(--pale); padding-left: 12px; }
+  section.optional { border-style: dashed; border-color: var(--pale); }
+  @media (max-width: 600px) { section.card { padding: 20px 18px; } header h1 { font-size: 1.6rem; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <div class="rule"></div>
+    <p class="eyebrow">Hands-on exercise</p>
+    <div class="title-row">
+      <img class="logo" src="assets/lumc-logo.png" alt="LUMC logo" width="76" height="76">
+      <h1>Tidy up a study folder and create a package</h1>
+    </div>
+    <p>A hands-on exercise in folder structure and file naming, using real, openly published data from a pediatric oncology study. You get a folder of data files and turn it into a well-organised data package.</p>
+    <div class="meta">
+      <span>⏱ 20 minutes (+5 optional)</span>
+      <span>📊 Based on real open data (CC BY 4.0)</span>
+      <span>✍️ Author: Paula Ramos-Silva</span>
+    </div>
+  </div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-inner">
+    <span id="progress-text">0 of 5 steps done</span>
+    <div class="bar"><div id="progress-bar"></div></div>
+  </div>
+</div>
+
+<main>
+
+  <section class="card" id="intro">
+    <h2>The study</h2>
+    <p>In the <strong>Bern-Basel 2021 wearable device pilot</strong> (project code <code>BBWDP</code>), 20 children receiving chemotherapy wore two wearable devices, the CORE® and the Everion®, for 14 days. Both devices measured core temperature every minute, so that fever could be detected early.</p>
+    <p>You get part of the published data: device data from two patients, the clinical data for all patients (as exported, and a cleaned version without double entries), three data dictionaries that describe the variables, and two R scripts: one that exported the device data and one that cleaned the clinical data. All files sit together in one folder, <code>BBWDP_data</code>, with names like <code>CORE_data.patient_01.csv</code> and <code>script.R</code>. <strong>Your job is to organise them into a clear structure with a consistent naming convention, so that anyone can find their way around.</strong></p>
+    <p class="source-note">The data are real and openly published under CC BY 4.0 (<a href="https://doi.org/10.6084/m9.figshare.22507342">Farner et al., 2024, figshare</a>; <a href="https://doi.org/10.1007/s00520-024-08366-w">Koenig et al., 2024, <em>Supportive Care in Cancer</em></a>). The published files are used unchanged; only a subset is used, and the export script was renamed. The cleaned clinical file and its cleaning script were made for this workshop.</p>
+    <h3>By the end of this exercise you can</h3>
+    <ul>
+      <li>tell raw data, processed data, documentation and code apart;</li>
+      <li>set up a clear folder structure for a research project;</li>
+      <li>apply a consistent file naming convention.</li>
+    </ul>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="card step" id="step-1">
+    <div class="step-label">Step 1</div>
+    <h2>Download and explore the files</h2>
+    <ol>
+      <li>Download <a href="downloads/BBWDP_data.zip" download>BBWDP_data.zip</a> and unzip it.</li>
+      <li>Open the folder <code>BBWDP_data</code> and look at the eleven files without opening the files. Which ones do you think are <strong>raw data</strong>, <strong>processed data</strong>, <strong>documentation</strong> or <strong>code</strong>?</li>
+      <li>Would a new colleague understand these names without help? What would you improve?</li>
+    </ol>
+    <label class="done-toggle"><input type="checkbox" data-step="1"> I've finished this step</label>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="card step" id="step-2">
+    <div class="step-label">Step 2</div>
+    <h2>Create a folder structure</h2>
+    <p>Inside <code>BBWDP_data</code>, create these folders. You can also copy the folders from the empty structure <code>PROJECTCODE_project/</code> in the <a href="downloads/template.zip" download>template</a>: replace <code>projectcode</code> by <code>bbwdp</code>.</p>
+<pre class="tree"><span class="dir">BBWDP_data/</span>
+├── <span class="dir">01_bbwdp_data/</span>
+│   ├── <span class="dir">raw/</span>              <span style="opacity:.6">data as collected – never edit</span>
+│   └── <span class="dir">processed/</span>        <span style="opacity:.6">data made from raw data by a script</span>
+├── <span class="dir">02_bbwdp_scripts/</span>     <span style="opacity:.6">data analysis scripts</span>
+└── <span class="dir">03_bbwdp_docs/</span>        <span style="opacity:.6">documentation: data dictionaries</span></pre>
+    <details class="hint"><summary>Hint: Why separate raw and processed data?</summary><div>
+      <p>Raw data is your only source of truth. If you keep it apart and never edit it, you can always redo the processing, for example by running <code>cleaning_script.R</code> again. Some researchers even make the <code>raw</code> folder read-only.</p>
+    </div></details>
+    <details class="hint"><summary>Hint: Why the numbers in front of the folder names?</summary><div>
+      <p>Numbers make folders sort in a logical order instead of alphabetically. Always use two digits (<code>01</code>, not <code>1</code>), so <code>10_</code> doesn't end up between <code>1_</code> and <code>2_</code>.</p>
+    </div></details>
+    <label class="done-toggle"><input type="checkbox" data-step="2"> I've finished this step</label>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="card step" id="step-3">
+    <div class="step-label">Step 3</div>
+    <h2>Rename and move the files</h2>
+    <p>Give at least three files a name that follows this convention, and move them to the right folder:</p>
+    <p style="text-align:center;font-size:1.1rem"><code>bbwdp_description_vNN.ext</code></p>
+    <table>
+      <tr><th>Element</th><th>Rule</th><th>Example</th></tr>
+      <tr><td>Project code</td><td>Always <code>bbwdp</code>, in lowercase</td><td><code>bbwdp</code></td></tr>
+      <tr><td>Description</td><td>1–4 words, lowercase, separated by hyphens <code>-</code>. No vague words like <em>final</em> or <em>old</em>.</td><td><code>core-patient01</code></td></tr>
+      <tr><td>Version</td><td><code>v</code> followed by two digits</td><td><code>v01</code></td></tr>
+    </table>
+    <p>Elements are separated by underscores <code>_</code>. No spaces, no special characters. Keep the extension (<code>.csv</code>, <code>.R</code>) as it is.</p>
+    <p>Since this is the first version of every file, they all get <code>v01</code>.</p>
+
+    <h3>🔍 Try a file name</h3>
+    <div class="namecheck">
+      <input id="name-input" type="text" spellcheck="false" autocomplete="off" placeholder="e.g. bbwdp_core-patient01_v01.csv">
+      <ul class="feedback" id="name-feedback"></ul>
+    </div>
+
+    <details class="hint"><summary>Hint: Why is there no date in the name?</summary><div>
+      <p>Many projects start file names with a date (<code>YYYYMMDD</code>) so files sort in time order. These data are <strong>de-identified</strong>: real dates were replaced by study days. So the convention for this project leaves the date out.</p>
+    </div></details>
+    <details class="hint"><summary>Hint: What's a good description for the Readme files?</summary><div>
+      <p>Say what they are and what they describe, for example <code>data-dictionary-core</code>. Then everyone can see at a glance which data file the data dictionary belongs to.</p>
+    </div></details>
+    <details class="hint"><summary>Hint: What happens to the scripts when I rename files?</summary><div>
+      <p>Scripts refer to files by name. Open <code>cleaning_script.R</code> in a text editor: at the top, <code>input_file</code> and <code>output_file</code> still use the old names. After renaming, those lines need updating before the script works again. <strong>You don't have to do that now:</strong> just remember that renaming has consequences for code, so agree on names early in a project.</p>
+    </div></details>
+    <label class="done-toggle"><input type="checkbox" data-step="3"> I've finished this step</label>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="card step" id="step-4">
+    <div class="step-label">Step 4</div>
+    <h2>Check your work</h2>
+    <p>Select your newly organized <code>BBWDP_data</code> folder. The checker looks at the structure, the file names, and whether each file ended up in the right place.</p>
+    <div class="picker">
+      <label class="button" for="folder-input">📁 Select your project folder</label>
+      <input id="folder-input" type="file" webkitdirectory directory multiple>
+      <small>Everything happens in your browser. Your files are <strong>not</strong> uploaded anywhere.<br>
+      Your browser may ask whether you want to "upload" the files. That's just its standard wording; nothing leaves your computer.</small>
+    </div>
+    <div id="results" aria-live="polite"></div>
+    <label class="done-toggle"><input type="checkbox" data-step="4"> I've finished this step</label>
+  </section>
+
+  <!-- STEP 5 -->
+  <section class="card step" id="step-5">
+    <div class="step-label">Step 5</div>
+    <h2>Compare with the model solution</h2>
+    <p>There is more than one good answer. Compare your version with ours.</p>
+    <details class="answer"><summary>Show the model solution</summary><div>
+      <pre class="tree" id="solution-tree"></pre>
+      <p><a class="dl" style="display:inline-block" href="downloads/solution.zip" download><strong>📦 Download solution.zip</strong><small>Includes a completed README.txt</small></a></p>
+    </div></details>
+    <h3>Reflect</h3>
+    <ul>
+      <li>Where did your choices differ from the solution? Is one clearly better, or is it a matter of taste?</li>
+      <li>Which convention would you agree on with your team <em>before</em> a project starts?</li>
+    </ul>
+    <label class="done-toggle"><input type="checkbox" data-step="5"> I've finished this step</label>
+  </section>
+
+  <!-- OPTIONAL -->
+  <section class="card optional" id="extra">
+    <div class="step-label">Optional extra</div>
+    <h2>Write a README</h2>
+    <p>Tidy names help, but a README tells the rest of the story. Copy <code>README-template.txt</code> from the <a href="downloads/template.zip" download>template</a> to the top of <code>BBWDP_data</code>, rename it to <code>README.txt</code>, and fill it in:</p>
+    <ul>
+      <li><strong>General information:</strong> the study title, a short description, the authors and a contact;</li>
+      <li><strong>Organization:</strong> the folder structure of <em>your</em> <code>BBWDP_data</code> folder (replace the example), the file naming convention you used, and the file formats.</li>
+    </ul>
+    <details class="hint"><summary>Hint: Where do I find this information?</summary><div>
+      <p>Use the study description at the top of this page and the links to the article and the data. For the file formats, look at the file extensions.</p>
+    </div></details>
+    <p>Then run the checker in step 4 again: it also looks for the README. Compare yours with the README in <a href="downloads/solution.zip" download>solution.zip</a>.</p>
+  </section>
+
+</main>
+
+<footer>
+  Data: Farner L, Koenig C, Ammann RA, Brack E (2024). <em>BernBasel2021WDP data.</em> figshare.
+  <a href="https://doi.org/10.6084/m9.figshare.22507342">doi:10.6084/m9.figshare.22507342</a> · CC BY 4.0<br>
+  Article: Koenig C, et al. (2024). <em>Supportive Care in Cancer</em> 32:188.
+  <a href="https://doi.org/10.1007/s00520-024-08366-w">doi:10.1007/s00520-024-08366-w</a>
+</footer>
+
+<script src="assets/solution-data.js"></script>
+<script>
+(function () {
+  "use strict";
+  var S = window.SOLUTION || { project: "BBWDP_data", code: "bbwdp", folders: [], files: [] };
+  var CODE = S.code || "bbwdp";
+
+  /* ---------- progress (remembered per browser when possible) ---------- */
+  var KEY = "data-package-workshop-progress";
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { saved = {}; }
+  var boxes = document.querySelectorAll("input[data-step]");
+  function updateProgress() {
+    var done = 0;
+    boxes.forEach(function (b) {
+      b.closest("section").classList.toggle("is-done", b.checked);
+      if (b.checked) done++;
+    });
+    document.getElementById("progress-text").textContent = done + " of " + boxes.length + " steps done";
+    document.getElementById("progress-bar").style.width = (100 * done / boxes.length) + "%";
+  }
+  boxes.forEach(function (b) {
+    b.checked = !!saved[b.dataset.step];
+    b.addEventListener("change", function () {
+      saved[b.dataset.step] = b.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+      updateProgress();
+    });
+  });
+  updateProgress();
+
+  /* ---------- file name rules ---------- */
+  var VAGUE = ["final", "new", "latest", "works", "work", "copy", "old", "temp", "tmp", "stuff", "misc", "kopie", "nieuw", "definitief"];
+
+  // Returns a list of {level, text}. level: ok | bad | warn
+  function checkName(name) {
+    var out = [];
+    if (!name) return out;
+    if (/\s/.test(name)) out.push({ level: "bad", text: "Contains spaces. Use _ between elements and - between words." });
+    var dotPos = name.lastIndexOf(".");
+    if (/[A-Z]/.test(dotPos > 0 ? name.slice(0, dotPos) : name)) out.push({ level: "bad", text: "Contains capital letters. Use lowercase only." });
+    var special = name.replace(/[A-Za-z0-9._\-\s]/g, "");
+    if (special) out.push({ level: "bad", text: "Contains special characters: " + Array.from(new Set(special.split(""))).join(" ") });
+    var words = name.toLowerCase().split(/[^a-z]+/);
+    var vague = VAGUE.filter(function (v) { return words.indexOf(v) !== -1; });
+    if (vague.length) out.push({ level: "bad", text: "Avoid vague words: " + vague.join(", ") + ". Describe the content instead." });
+
+    var dot = name.lastIndexOf(".");
+    if (dot <= 0) { out.push({ level: "bad", text: "No file extension (like .csv or .txt)." }); return out; }
+    var stem = name.slice(0, dot), ext = name.slice(dot + 1);
+    var parts = stem.split("_");
+    if (parts.length !== 3) {
+      out.push({ level: "bad", text: "Expected 3 elements separated by underscores (" + CODE + "_description_vNN), found " + parts.length + "." });
+      return out;
+    }
+    var code = parts[0], desc = parts[1], ver = parts[2];
+    if (code !== CODE) out.push({ level: "bad", text: "Element 1 should be the project code \"" + CODE + "\" (found \"" + code + "\")." });
+    else out.push({ level: "ok", text: "Project code: " + code });
+    if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(desc)) out.push({ level: "bad", text: "Element 2 (description) should be lowercase words separated by hyphens, e.g. core-patient01." });
+    else {
+      var n = desc.split("-").length;
+      if (n > 4) out.push({ level: "warn", text: "Description has " + n + " words. Try to keep it to 4 or fewer." });
+      else out.push({ level: "ok", text: "Description: " + desc });
+    }
+    if (!/^v\d{2}$/.test(ver)) out.push({ level: "bad", text: "Element 3 should be a version like v01 or v02 (two digits)." });
+    else out.push({ level: "ok", text: "Version: " + ver });
+    // .R is conventionally written in capitals, so allow that one.
+    if (!/^[a-z0-9]+$/.test(ext) && ext !== "R") out.push({ level: "bad", text: "The extension should be lowercase, e.g. .csv (only .R scripts are an exception)." });
+    return out;
+  }
+  function isProblem(r) { return r.level !== "ok"; }
+
+  var nameInput = document.getElementById("name-input");
+  var nameFb = document.getElementById("name-feedback");
+  nameInput.addEventListener("input", function () {
+    var res = checkName(nameInput.value.trim());
+    nameFb.innerHTML = "";
+    var bad = res.some(function (r) { return r.level === "bad"; });
+    nameInput.classList.toggle("good", !!nameInput.value && !bad);
+    nameInput.classList.toggle("bad", !!nameInput.value && bad);
+    if (nameInput.value && !bad) res.unshift({ level: "ok", text: "This name follows the convention. Nice!" });
+    res.forEach(function (r) {
+      var li = document.createElement("li");
+      li.className = r.level; li.textContent = r.text; nameFb.appendChild(li);
+    });
+  });
+
+  /* ---------- CRC32 (to recognise files by content after renaming) ---------- */
+  var CRC_TABLE = (function () {
+    var t = [], c;
+    for (var n = 0; n < 256; n++) {
+      c = n;
+      for (var k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1;
+      t[n] = c >>> 0;
+    }
+    return t;
+  })();
+  function crc32(bytes) {
+    var crc = 0xFFFFFFFF;
+    for (var i = 0; i < bytes.length; i++) crc = CRC_TABLE[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+
+  /* ---------- folder checker ---------- */
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function c(s) { return "<code>" + esc(s) + "</code>"; }
+  function isIgnored(name) { return name.charAt(0) === "." || /^(thumbs\.db|desktop\.ini)$/i.test(name); }
+  function isReadme(name) { return /^readme(\.(md|txt))?$/i.test(name); }
+
+  var solFiles = S.files.filter(function (f) { return !isReadme(f.name); });
+  var MIN_RENAMED = S.minRenamed || 3;
+  var starterNames = {};
+  S.files.forEach(function (f) { if (f.starterName) starterNames[f.starterName] = true; });
+  var solByKey = {};
+  solFiles.forEach(function (f) { solByKey[f.crc + ":" + f.size] = f; });
+  var expectedFolders = S.folders;
+  var topFolders = {};
+  expectedFolders.forEach(function (f) { topFolders[f.split("/")[0]] = true; });
+
+  document.getElementById("folder-input").addEventListener("change", function (ev) {
+    var list = Array.prototype.slice.call(ev.target.files || []);
+    runCheck(list).catch(function (err) {
+      document.getElementById("results").innerHTML =
+        '<div class="result error"><h4>Something went wrong while reading the folder</h4><ul><li>' + esc(err.message || err) + "</li></ul></div>";
+    });
+    ev.target.value = "";
+  });
+
+  async function runCheck(list) {
+    var out = document.getElementById("results");
+    var entries = list
+      .map(function (f) { return { file: f, parts: (f.webkitRelativePath || f.name).split("/") }; })
+      .filter(function (e) { return !e.parts.some(isIgnored); });
+
+    if (!entries.length) {
+      out.innerHTML = '<div class="result warn"><h4>No files found</h4><ul><li>Did you select the right folder? Select the <code>' + esc(S.project) + "</code> folder itself.</li></ul></div>";
+      return;
+    }
+
+    // Strip the selected folder (and any wrapping folder) until we're at the project root.
+    while (entries.every(function (e) { return e.parts.length > 1 && e.parts[0] === entries[0].parts[0]; })
+           && !topFolders[entries[0].parts[0]]) {
+      entries.forEach(function (e) { e.parts = e.parts.slice(1); });
+    }
+
+    // Read every file and compute its fingerprint.
+    for (var i = 0; i < entries.length; i++) {
+      var e = entries[i];
+      var buf = new Uint8Array(await e.file.arrayBuffer());
+      e.key = crc32(buf) + ":" + buf.length;
+      e.name = e.parts[e.parts.length - 1];
+      e.folder = e.parts.slice(0, -1).join("/");
+      e.path = e.parts.join("/");
+    }
+
+    var results = [];
+    function add(level, title, items) { results.push({ level: level, title: title, items: items || [] }); }
+
+    // 1. README
+    var readme = entries.filter(function (e) { return e.folder === "" && isReadme(e.name); })[0];
+    if (!readme) add("info", "No README yet (optional extra)", ["Want to go further? Add a " + c("README.txt") + " directly inside " + c(S.project) + ". See the optional extra at the bottom of the page."]);
+    else if (readme.file.size < 400) add("warn", "README found, but it looks quite short", ["Did you fill in the general information and the organization sections?"]);
+    else add("ok", "README found");
+
+    // 2. Unexpected folders, and files not (yet) moved into the structure
+    var outside = [], notMoved = [];
+    var unexpectedFolders = {};
+    entries.forEach(function (e) {
+      if (/read-?me-?first/i.test(e.name)) outside.push(c(e.path) + ": this instruction file is not part of the project. Delete it.");
+      else if (e.folder === "" && !isReadme(e.name)) notMoved.push(c(e.name));
+      for (var d = 1; d < e.parts.length; d++) {
+        var folder = e.parts.slice(0, d).join("/");
+        if (expectedFolders.indexOf(folder) === -1) { unexpectedFolders[folder] = true; break; }
+      }
+    });
+    Object.keys(unexpectedFolders).forEach(function (f) {
+      outside.push("Folder " + c(f + "/") + " is not part of the agreed structure.");
+    });
+    if (outside.length) add("error", "Folders outside the structure", outside);
+    if (!notMoved.length && !outside.length) add("ok", "All files are inside the folder structure");
+
+    // 3. Folder structure
+    var present = {};
+    entries.forEach(function (e) {
+      for (var d = 1; d < e.parts.length; d++) present[e.parts.slice(0, d).join("/")] = true;
+    });
+    var missing = expectedFolders.filter(function (f) { return !present[f]; });
+    if (missing.length) add("info", "Folders we couldn't see", ["Your browser can't see empty folders, so these may exist but still be empty. That's fine if you haven't moved files there yet:"]
+      .concat(missing.map(function (f) { return c(f + "/"); })));
+    else add("ok", "All " + expectedFolders.length + " folders of the structure are in place");
+
+    // 4. File names: at least MIN_RENAMED must follow the convention.
+    // Files that still have their original starter name are "not renamed yet" (fine);
+    // files that were renamed but don't follow the convention are errors.
+    var nameProblems = [], notRenamed = [], goodNames = 0;
+    entries.forEach(function (e) {
+      if (isReadme(e.name) || /read-?me-?first/i.test(e.name)) return;
+      var probs = checkName(e.name).filter(isProblem);
+      if (!probs.length) { goodNames++; return; }
+      if (starterNames[e.name]) { if (e.folder !== "") notRenamed.push(c(e.path)); }
+      else nameProblems.push(c(e.path) + "<br>" + probs.map(function (p) { return "– " + esc(p.text); }).join("<br>"));
+    });
+    if (nameProblems.length) add("error", nameProblems.length + " renamed file" + (nameProblems.length > 1 ? "s don't" : " doesn't") + " follow the convention", nameProblems);
+    if (goodNames >= MIN_RENAMED) add("ok", goodNames + " file names follow the convention");
+    else add("error", "Rename at least " + MIN_RENAMED + " files", [goodNames + " file name" + (goodNames === 1 ? " follows" : "s follow") + " the convention so far."]);
+    if (notMoved.length) {
+      if (goodNames >= MIN_RENAMED) add("info", notMoved.length + " file" + (notMoved.length > 1 ? "s" : "") + " not renamed and moved yet",
+        ["That's fine: at least " + MIN_RENAMED + " is enough. Want to go further? Rename and move these too:"].concat(notMoved));
+      else add("info", notMoved.length + " file" + (notMoved.length > 1 ? "s" : "") + " still to do",
+        ["Pick at least " + (MIN_RENAMED - goodNames) + " more of these, give them a name that follows the convention and move them to the right folder:"].concat(notMoved));
+    }
+    if (notRenamed.length && goodNames >= MIN_RENAMED) add("info", notRenamed.length + " moved file" + (notRenamed.length > 1 ? "s" : "") + " not renamed yet",
+      ["That's fine. Want to go further? Rename these too:"].concat(notRenamed));
+
+    // 5. Duplicates
+    var byKey = {};
+    entries.forEach(function (e) { (byKey[e.key] = byKey[e.key] || []).push(e); });
+    var dups = Object.keys(byKey).filter(function (k) { return byKey[k].length > 1; })
+      .map(function (k) { return "Identical files: " + byKey[k].map(function (e) { return c(e.path); }).join(" and ") + ". Keep one."; });
+    if (dups.length) add("error", "Duplicate files found", dups);
+    else add("ok", "No duplicate files");
+
+    // 6. Right place, right date, right version (matched by content)
+    var placement = [], dateVer = [], notFound = [], movedCount = 0;
+    solFiles.forEach(function (sf) {
+      var mine = (byKey[sf.crc + ":" + sf.size] || [])[0];
+      if (!mine) { notFound.push("We expected a file like " + c(sf.name) + " but couldn't find it. Did you delete or edit it?"); return; }
+      if (mine.folder !== "" && mine.folder !== sf.folder) placement.push(c(mine.path) + " should be in " + c((sf.folder || "(top level)") + "/"));
+      if (mine.folder !== "") movedCount++;
+      var p = mine.name.split(".")[0].split("_");
+      if (!checkName(mine.name).filter(isProblem).length && sf.version && p[2] !== "v" + sf.version) dateVer.push(c(mine.name) + ": we'd expect version " + c("v" + sf.version) + ".");
+    });
+    if (placement.length) add("error", "Some files are in the wrong folder", placement);
+    else if (!notFound.length && movedCount) add("ok", "Every file you moved is in the right folder");
+    if (dateVer.length) add("warn", "Check the version numbers", dateVer);
+    if (notFound.length) add("warn", "Files we couldn't find", notFound);
+
+    var extra = entries.filter(function (e) { return !solByKey[e.key] && !isReadme(e.name) && !/read-?me-?first/i.test(e.name); })
+      .filter(function (e) { return (byKey[e.key] || []).length === 1; });
+    if (extra.length) add("warn", "Files we didn't recognise", extra.map(function (e) {
+      return c(e.path) + ": not from the starter folder, or its content was changed. That's fine if it was on purpose.";
+    }));
+
+    // Render
+    var scored = results.filter(function (r) { return r.level !== "info"; });
+    var oks = scored.filter(function (r) { return r.level === "ok"; }).length;
+    var errs = scored.filter(function (r) { return r.level === "error"; }).length;
+    var headline = errs === 0
+      ? (scored.every(function (r) { return r.level === "ok"; }) ? "🎉 Excellent! Everything checks out." : "👍 Nearly there. Have a look at the points below.")
+      : "🔧 " + oks + " of " + scored.length + " checks passed. Fix the red items and check again.";
+    var order = { error: 0, warn: 1, ok: 2, info: 3 };
+    var icon = { ok: "✔ ", warn: "! ", error: "✖ ", info: "ℹ " };
+    results.sort(function (a, b) { return order[a.level] - order[b.level]; });
+    out.innerHTML = '<p class="score">' + headline + "</p>" + results.map(function (r) {
+      return '<div class="result ' + r.level + '"><h4>' + icon[r.level] + r.title + "</h4>" +
+        (r.items.length ? "<ul>" + r.items.map(function (i) { return "<li>" + i + "</li>"; }).join("") + "</ul>" : "") + "</div>";
+    }).join("");
+  }
+
+  /* ---------- solution tree ---------- */
+  (function renderTree() {
+    var root = { dirs: {}, files: [] };
+    S.files.forEach(function (f) {
+      var node = root;
+      (f.folder ? f.folder.split("/") : []).forEach(function (p) { node = node.dirs[p] = node.dirs[p] || { dirs: {}, files: [] }; });
+      node.files.push(f.name);
+    });
+    var lines = ['<span class="dir">' + esc(S.project) + "/</span>"];
+    (function walk(node, prefix) {
+      var items = node.files.slice().sort(function (a, b) { return isReadme(a) ? -1 : isReadme(b) ? 1 : a < b ? -1 : 1; })
+        .map(function (f) { return { name: f }; })
+        .concat(Object.keys(node.dirs).sort().map(function (d) { return { name: d, node: node.dirs[d] }; }));
+      items.forEach(function (it, i) {
+        var last = i === items.length - 1;
+        lines.push(prefix + (last ? "└── " : "├── ") + (it.node ? '<span class="dir">' + esc(it.name) + "/</span>" : esc(it.name)));
+        if (it.node) walk(it.node, prefix + (last ? "    " : "│   "));
+      });
+    })(root, "");
+    document.getElementById("solution-tree").innerHTML = lines.join("\n");
+  })();
+})();
+</script>
+</body>
+</html>
