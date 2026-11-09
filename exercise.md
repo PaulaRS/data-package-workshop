@@ -36,7 +36,7 @@ find their way around.**
 
 1. Download [BBWDP_data.zip](downloads/BBWDP_data.zip) and unzip it.
 2. Open the folder `BBWDP_data` and look at the eleven files without opening the files.
-3. Which ones do you think are raw data, processed data, documentation or code? Discuss with your neighbor.
+3. Which ones do you think are **raw data**, **processed data**, **documentation** or **code**? Discuss with your neighbor.
 4. Would a new colleague understand these names without help? What would you improve?
 
 ## Step 2: Create a folder structure
@@ -55,7 +55,7 @@ BBWDP_project/
 
 ## Step 3: Rename the files
 
-Give at least three files a name that follows this convention:
+Give at least **three files** a name that follows this convention:
 
 ```
 bbwdp_description_vNN.ext
