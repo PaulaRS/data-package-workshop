@@ -1,4 +1,4 @@
-# Tidy up a study folder and create a package
+# Tidy up a study folder and create a data package
 
 A 20-minute interactive, hands-on exercise for research data management training, built on
 **real open data** from a pediatric oncology study. Learners get a folder of published data files and organise

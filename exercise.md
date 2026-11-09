@@ -1,4 +1,4 @@
-# Tidy up a study folder and create a package
+# Tidy up a study folder and create a data package
 
 > 💡 This is the plain-text version of the exercise. The [interactive version](index.html) has the same steps,
 > plus a file name checker and a tool that checks your finished folder.
