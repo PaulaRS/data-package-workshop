@@ -70,7 +70,8 @@ bbwdp_description_vNN.ext
 Elements are separated by underscores `_`. No spaces, no special characters. Keep the extension as it is.
 Since this is the first version of every file, they all get `v01`.
 
-Raw data is your only source of truth: keep it apart and never edit it, so you can always redo the processing.
+Raw data is your source of truth: keep it apart and never edit it, so you can always redo the processing.
+Some researchers even make the `raw` folder read-only when data creation/collection is finished.
 
 <details>
 <summary>💡 Hint: Why is there no date in the name?</summary>
