@@ -209,8 +209,8 @@
   <section class="card step" id="step-2">
     <div class="step-label">Step 2</div>
     <h2>Create a folder structure</h2>
-    <p>Download the <a href="downloads/template.zip" download>template</a>. In <code>PROJECTCODE_project/</code> replace <code>projectcode</code> by <code>bbwdp</code> and move the files from <code>BBWDP_data</code> into the right folder.</p>
-<pre class="tree"><span class="dir">BBWDP_data/</span>
+    <p>Download the <a href="downloads/template.zip" download>template</a> and rename <code>PROJECTCODE_project/</code> to <code>BBWDP_project/</code>. In it, replace <code>projectcode</code> by <code>bbwdp</code> and move the files from <code>BBWDP_data</code> into the right folder.</p>
+<pre class="tree"><span class="dir">BBWDP_project/</span>
 ├── <span class="dir">01_bbwdp_data/</span>
 │   ├── <span class="dir">raw/</span>              <span style="opacity:.6">data as collected – never edit</span>
 │   └── <span class="dir">processed/</span>        <span style="opacity:.6">data made from raw data by a script</span>
@@ -229,7 +229,7 @@
   <section class="card step" id="step-3">
     <div class="step-label">Step 3</div>
     <h2>Rename and move the files</h2>
-    <p>Give at least three files a name that follows this convention, and move them to the right folder:</p>
+    <p>Give at least three files a name that follows this convention:</p>
     <p style="text-align:center;font-size:1.1rem"><code>bbwdp_description_vNN.ext</code></p>
     <table>
       <tr><th>Element</th><th>Rule</th><th>Example</th></tr>
@@ -262,7 +262,7 @@
   <section class="card step" id="step-4">
     <div class="step-label">Step 4</div>
     <h2>Check your work</h2>
-    <p>Select your newly organized <code>BBWDP_data</code> folder. The checker looks at the structure, the file names, and whether each file ended up in the right place.</p>
+    <p>Select your newly organized <code>BBWDP_project</code> folder. The checker looks at the structure, the file names, and whether each file ended up in the right place.</p>
     <div class="picker">
       <label class="button" for="folder-input">📁 Select your project folder</label>
       <input id="folder-input" type="file" webkitdirectory directory multiple>
@@ -294,10 +294,10 @@
   <section class="card optional" id="extra">
     <div class="step-label">Optional extra</div>
     <h2>Write a README</h2>
-    <p>Tidy names help, but a README tells the rest of the story. Copy <code>README-template.txt</code> from the <a href="downloads/template.zip" download>template</a> to the top of <code>BBWDP_data</code>, rename it to <code>README.txt</code>, and fill it in:</p>
+    <p>Tidy names help, but a README tells the rest of the story. Copy <code>README-template.txt</code> from the <a href="downloads/template.zip" download>template</a> to the top of <code>BBWDP_project</code>, rename it to <code>README.txt</code>, and fill it in:</p>
     <ul>
       <li><strong>General information:</strong> the study title, a short description, the authors and a contact;</li>
-      <li><strong>Organization:</strong> the folder structure of <em>your</em> <code>BBWDP_data</code> folder (replace the example), the file naming convention you used, and the file formats.</li>
+      <li><strong>Organization:</strong> the folder structure of <em>your</em> <code>BBWDP_project</code> folder (replace the example), the file naming convention you used, and the file formats.</li>
     </ul>
     <details class="hint"><summary>Hint: Where do I find this information?</summary><div>
       <p>Use the study description at the top of this page and the links to the article and the data. For the file formats, look at the file extensions.</p>
@@ -318,7 +318,7 @@
 <script>
 (function () {
   "use strict";
-  var S = window.SOLUTION || { project: "BBWDP_data", code: "bbwdp", folders: [], files: [] };
+  var S = window.SOLUTION || { project: "BBWDP_project", code: "bbwdp", folders: [], files: [] };
   var CODE = S.code || "bbwdp";
 
   /* ---------- progress (remembered per browser when possible) ---------- */
@@ -475,7 +475,7 @@
     // 1. README
     var readme = entries.filter(function (e) { return e.folder === "" && isReadme(e.name); })[0];
     if (!readme) add("info", "No README yet (optional extra)", ["Want to go further? Add a " + c("README.txt") + " directly inside " + c(S.project) + ". See the optional extra at the bottom of the page."]);
-    else if (readme.file.size < 400) add("warn", "README found, but it looks quite short", ["Did you fill in the general information and the organization sections?"]);
+    else if (readme.file.size < 400) add("info", "README not filled in yet (optional extra)", ["Want to go further? Fill in the general information and the organization sections. See the optional extra at the bottom of the page."]);
     else add("ok", "README found");
 
     // 2. Unexpected folders, and files not (yet) moved into the structure
