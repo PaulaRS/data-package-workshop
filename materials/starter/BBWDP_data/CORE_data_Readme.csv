@@ -1,0 +1,4 @@
+Information;patient;StudyDay;core_temp;core_qual;readout_studyday;Column1
+Content/Description;Random patient number;Day of the study period;Core temperature;Core temperature quality score;Timepoint of data arrival on gateway;Reference line number
+Type;Integer;Real number;Real number;Integer;Real number;Real number
+Unit;Without unit;Days [starting with 1 at date of study start, fraction of day corresponds to real time of day];Degree celsius (°C);N/A;Days [starting with 1 at date of study start, fraction of day corresponds to real time of day];N/A
