@@ -27,7 +27,7 @@ find their way around.**
 **By the end of this exercise you can**
 
 - tell raw data, processed data, documentation and code apart;
-- set up a clear folder structure for a research project;
+- set up a clear folder structure for a data package;
 - apply a consistent file naming convention.
 
 ---
