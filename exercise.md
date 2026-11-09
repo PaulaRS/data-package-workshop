@@ -41,8 +41,8 @@ find their way around.**
 
 ## Step 2: Create a folder structure
 
-Download the [template](downloads/template.zip) and rename `PROJECTCODE_project/` to `BBWDP_project/`. In it, replace
-`projectcode` by `bbwdp` and move the files from `BBWDP_data` into the right folder.
+Download the [template](downloads/template.zip) and rename the folder `PROJECTCODE_project/` to `BBWDP_project/`. In its
+subfolders, replace `projectcode` by `bbwdp` and move the files from `BBWDP_data` into the right subfolder.
 
 ```
 BBWDP_project/
