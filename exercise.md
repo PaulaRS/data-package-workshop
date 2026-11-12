@@ -68,8 +68,9 @@ bbwdp_description_vNN.ext
 | Version | `v` + two digits | `v01` |
 
 Elements are separated by underscores `_`. No spaces, no special characters. Keep the extension as it is.
-**Scripts** (`.R`) get no version number: `bbwdp_description.R`. Since this is the first version of every other file,
-they all get `v01`.
+**Scripts** (`.R`) are an exception: name them after what they do, without project code or version number, for example
+`remove-duplicates.R`. The project code is already in the folder name. All other files get `v01`, since this is their
+first version.
 
 Raw data is your source of truth: keep it apart and never edit it, so you can always redo the processing.
 Some researchers even make the `raw` folder read-only when data creation/collection is finished.
@@ -108,8 +109,8 @@ BBWDP_project/
 │       ├── bbwdp_everion-patient01_v01.csv
 │       └── bbwdp_everion-patient02_v01.csv
 ├── 02_bbwdp_code/
-│   ├── bbwdp_csv-export.R
-│   └── bbwdp_remove-duplicates.R
+│   ├── export-device-data.R
+│   └── remove-duplicates.R
 └── 03_bbwdp_docs/
     ├── bbwdp_data-dictionary-clinical_v01.csv
     ├── bbwdp_data-dictionary-core_v01.csv

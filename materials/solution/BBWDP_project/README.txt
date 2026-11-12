@@ -22,7 +22,8 @@ ORGANIZATION
 └── README.txt
 
 - File naming conventions: bbwdp_description_vNN (e.g. bbwdp_core-patient01_v01.csv)
-  Scripts get no version number: bbwdp_description (e.g. bbwdp_remove-duplicates.R)
+  Scripts are named after what they do, without project code or version number
+  (e.g. remove-duplicates.R). The project code is in the folder name.
   The data are de-identified (real dates were replaced by study days), so file names
   contain no dates.
 
@@ -38,7 +39,7 @@ DATA-SPECIFIC INFORMATION
 - See the data dictionaries in 03_bbwdp_docs for all variables and units.
 
 PROCESSING
-02_bbwdp_code/bbwdp_remove-duplicates.R reads the raw clinical file, removes 4 rows that
+02_bbwdp_code/remove-duplicates.R reads the raw clinical file, removes 4 rows that
 are exact duplicates of earlier rows (ear temperature measurements entered twice), and
 writes 01_bbwdp_data/processed/bbwdp_clinical-all-patients-cleaned_v01.csv. All other values
 are unchanged.
@@ -58,8 +59,8 @@ bbwdp_clinical-all-patients-cleaned_v01.csv  NonWD_data_both_devices.all_patient
 bbwdp_data-dictionary-core_v01.csv           CORE_data_Readme.csv
 bbwdp_data-dictionary-everion_v01.csv        Everion_data_Readme.csv
 bbwdp_data-dictionary-clinical_v01.csv       Readme_NonWD_data_both_devices.all_patients.csv
-bbwdp_csv-export.R                           Skript_Anleitung.R (script.R in the workshop folder)
-bbwdp_remove-duplicates.R                    cleaning_script.R (*)
+export-device-data.R                         Skript_Anleitung.R (script.R in the workshop folder)
+remove-duplicates.R                          cleaning_script.R (*)
 (*) made for this workshop, not part of the figshare record
 
 SOURCE AND LICENCE

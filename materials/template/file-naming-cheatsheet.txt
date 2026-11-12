@@ -10,9 +10,10 @@ THE PATTERN
   Version        v + two digits                                    v01, v02
   Separator      Underscore (_) between elements
 
-Scripts (.R, .py, ...) get no version number:
-  projectcode_description.ext                                      bbwdp_csv-export.R
-Keep track of script versions with version control (for example Git) instead.
+Scripts (.R, .py, ...) are named after what they do: no project code, no version.
+  description.ext                                                  remove-duplicates.R
+The project code is already in the folder name (02_projectcode_code). Keep track of
+script versions with version control (for example Git).
 
 Many projects also start file names with a date (YYYYMMDD or YYYY-MM-DD), so files
 sort in time order. This dataset is de-identified and has no real dates, so we leave
@@ -33,4 +34,4 @@ EXAMPLES
   --------------------------  -------------------------------------
   CORE_data.patient_02.csv    bbwdp_core-patient02_v01.csv
   Everion_data_Readme.csv     bbwdp_data-dictionary-everion_v01.csv
-  cleaning_script.R           bbwdp_remove-duplicates.R
+  cleaning_script.R           remove-duplicates.R

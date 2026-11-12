@@ -13,8 +13,8 @@ window.SOLUTION = {
     {
       "name": "README.txt",
       "folder": "",
-      "crc": 875429802,
-      "size": 4301,
+      "crc": 3303820231,
+      "size": 4361,
       "version": null,
       "starterName": null
     },
@@ -67,7 +67,7 @@ window.SOLUTION = {
       "starterName": "Everion_data.patient_02.csv"
     },
     {
-      "name": "bbwdp_csv-export.R",
+      "name": "export-device-data.R",
       "folder": "02_bbwdp_code",
       "crc": 3944408194,
       "size": 1413,
@@ -75,7 +75,7 @@ window.SOLUTION = {
       "starterName": "script.R"
     },
     {
-      "name": "bbwdp_remove-duplicates.R",
+      "name": "remove-duplicates.R",
       "folder": "02_bbwdp_code",
       "crc": 2757885131,
       "size": 2123,
