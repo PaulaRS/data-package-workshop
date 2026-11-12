@@ -14,5 +14,5 @@ Example of a top-level directory layout:
 ├── 03_projectcode_docs           # documentation: protocols, DMP, etc.
 └── README.txt
 
-- File naming conventions: projectcode_description_vNN (scripts: projectcode_description)
+- File naming conventions: projectcode_description_vNN (scripts: what the script does, e.g. remove-duplicates.R)
 - File formats:
