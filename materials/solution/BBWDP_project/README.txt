@@ -17,11 +17,12 @@ ORGANIZATION
 ├── 01_bbwdp_data
 │   ├── raw               # data as collected and exported - never edit these files
 │   └── processed         # clinical data with double entries removed
-├── 02_bbwdp_scripts      # R scripts: export of device data, removal of double entries
+├── 02_bbwdp_code         # R scripts: export of device data, removal of double entries
 ├── 03_bbwdp_docs         # documentation: data dictionaries (variables, types, units)
 └── README.txt
 
 - File naming conventions: bbwdp_description_vNN (e.g. bbwdp_core-patient01_v01.csv)
+  Scripts get no version number: bbwdp_description (e.g. bbwdp_remove-duplicates.R)
   The data are de-identified (real dates were replaced by study days), so file names
   contain no dates.
 
@@ -37,7 +38,7 @@ DATA-SPECIFIC INFORMATION
 - See the data dictionaries in 03_bbwdp_docs for all variables and units.
 
 PROCESSING
-02_bbwdp_scripts/bbwdp_remove-duplicates_v01.R reads the raw clinical file, removes 4 rows that
+02_bbwdp_code/bbwdp_remove-duplicates.R reads the raw clinical file, removes 4 rows that
 are exact duplicates of earlier rows (ear temperature measurements entered twice), and
 writes 01_bbwdp_data/processed/bbwdp_clinical-all-patients-cleaned_v01.csv. All other values
 are unchanged.
@@ -45,7 +46,7 @@ Note: the script still uses the original file names (input_file and output_file 
 top). After renaming, change them to
   ../01_bbwdp_data/raw/bbwdp_clinical-all-patients_v01.csv
   ../01_bbwdp_data/processed/bbwdp_clinical-all-patients-cleaned_v01.csv
-and run the script from 02_bbwdp_scripts.
+and run the script from 02_bbwdp_code.
 
 ORIGINAL FILE NAMES
 bbwdp_core-patient01_v01.csv                 CORE_data.patient_01.csv
@@ -57,8 +58,8 @@ bbwdp_clinical-all-patients-cleaned_v01.csv  NonWD_data_both_devices.all_patient
 bbwdp_data-dictionary-core_v01.csv           CORE_data_Readme.csv
 bbwdp_data-dictionary-everion_v01.csv        Everion_data_Readme.csv
 bbwdp_data-dictionary-clinical_v01.csv       Readme_NonWD_data_both_devices.all_patients.csv
-bbwdp_csv-export_v01.R                       Skript_Anleitung.R (script.R in the workshop folder)
-bbwdp_remove-duplicates_v01.R                cleaning_script.R (*)
+bbwdp_csv-export.R                           Skript_Anleitung.R (script.R in the workshop folder)
+bbwdp_remove-duplicates.R                    cleaning_script.R (*)
 (*) made for this workshop, not part of the figshare record
 
 SOURCE AND LICENCE
