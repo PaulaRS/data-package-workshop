@@ -49,7 +49,7 @@ BBWDP_project/
 ├── 01_bbwdp_data/
 │   ├── raw/              data as collected – never edit
 │   └── processed/        data made from raw data by a script
-├── 02_bbwdp_scripts/     data analysis scripts
+├── 02_bbwdp_code/        data analysis scripts
 └── 03_bbwdp_docs/        documentation: data dictionaries
 ```
 
@@ -68,7 +68,8 @@ bbwdp_description_vNN.ext
 | Version | `v` + two digits | `v01` |
 
 Elements are separated by underscores `_`. No spaces, no special characters. Keep the extension as it is.
-Since this is the first version of every file, they all get `v01`.
+**Scripts** (`.R`) get no version number: `bbwdp_description.R`. Since this is the first version of every other file,
+they all get `v01`.
 
 Raw data is your source of truth: keep it apart and never edit it, so you can always redo the processing.
 Some researchers even make the `raw` folder read-only when data creation/collection is finished.
@@ -106,9 +107,9 @@ BBWDP_project/
 │       ├── bbwdp_core-patient02_v01.csv
 │       ├── bbwdp_everion-patient01_v01.csv
 │       └── bbwdp_everion-patient02_v01.csv
-├── 02_bbwdp_scripts/
-│   ├── bbwdp_csv-export_v01.R
-│   └── bbwdp_remove-duplicates_v01.R
+├── 02_bbwdp_code/
+│   ├── bbwdp_csv-export.R
+│   └── bbwdp_remove-duplicates.R
 └── 03_bbwdp_docs/
     ├── bbwdp_data-dictionary-clinical_v01.csv
     ├── bbwdp_data-dictionary-core_v01.csv

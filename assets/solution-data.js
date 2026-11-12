@@ -6,15 +6,15 @@ window.SOLUTION = {
     "01_bbwdp_data",
     "01_bbwdp_data/processed",
     "01_bbwdp_data/raw",
-    "02_bbwdp_scripts",
+    "02_bbwdp_code",
     "03_bbwdp_docs"
   ],
   "files": [
     {
       "name": "README.txt",
       "folder": "",
-      "crc": 1109388655,
-      "size": 4226,
+      "crc": 875429802,
+      "size": 4301,
       "version": null,
       "starterName": null
     },
@@ -67,19 +67,19 @@ window.SOLUTION = {
       "starterName": "Everion_data.patient_02.csv"
     },
     {
-      "name": "bbwdp_csv-export_v01.R",
-      "folder": "02_bbwdp_scripts",
+      "name": "bbwdp_csv-export.R",
+      "folder": "02_bbwdp_code",
       "crc": 3944408194,
       "size": 1413,
-      "version": "01",
+      "version": null,
       "starterName": "script.R"
     },
     {
-      "name": "bbwdp_remove-duplicates_v01.R",
-      "folder": "02_bbwdp_scripts",
+      "name": "bbwdp_remove-duplicates.R",
+      "folder": "02_bbwdp_code",
       "crc": 2757885131,
       "size": 2123,
-      "version": "01",
+      "version": null,
       "starterName": "cleaning_script.R"
     },
     {

@@ -215,7 +215,7 @@
 ├── <span class="dir">01_bbwdp_data/</span>
 │   ├── <span class="dir">raw/</span>              <span style="opacity:.6">data as collected – never edit</span>
 │   └── <span class="dir">processed/</span>        <span style="opacity:.6">data made from raw data by a script</span>
-├── <span class="dir">02_bbwdp_scripts/</span>     <span style="opacity:.6">data analysis scripts</span>
+├── <span class="dir">02_bbwdp_code/</span>        <span style="opacity:.6">data analysis scripts</span>
 └── <span class="dir">03_bbwdp_docs/</span>        <span style="opacity:.6">documentation: data dictionaries</span></pre>
     <details class="hint"><summary>Hint: Why separate raw and processed data?</summary><div>
       <p>Raw data is your source of truth. If you keep it apart and never edit it, you can always redo the processing, for example by running <code>cleaning_script.R</code> again. Some researchers even make the <code>raw</code> folder read-only when data creation/collection is finished.</p>
@@ -239,7 +239,7 @@
       <tr><td>Version</td><td><code>v</code> followed by two digits</td><td><code>v01</code></td></tr>
     </table>
     <p>Elements are separated by underscores <code>_</code>. No spaces, no special characters. Keep the extension (<code>.csv</code>, <code>.R</code>) as it is.</p>
-    <p>Since this is the first version of every file, they all get <code>v01</code>.</p>
+    <p><strong>Scripts</strong> (<code>.R</code>) get no version number: <code>bbwdp_description.R</code>. Since this is the first version of every other file, they all get <code>v01</code>.</p>
 
     <h3>🔍 Try a file name</h3>
     <div class="namecheck">
@@ -365,7 +365,18 @@
     if (dot <= 0) { out.push({ level: "bad", text: "No file extension (like .csv or .txt)." }); return out; }
     var stem = name.slice(0, dot), ext = name.slice(dot + 1);
     var parts = stem.split("_");
-    if (parts.length !== 3) {
+    // Scripts get no version number: projectcode_description.ext
+    var isScript = SCRIPT_EXT.indexOf(ext.toLowerCase()) !== -1;
+    if (isScript) {
+      if (parts.length === 3 && /^v\d+$/.test(parts[2])) {
+        out.push({ level: "bad", text: "Scripts don't get a version number. Use " + CODE + "_description." + ext + " (keep track of versions with version control, such as Git)." });
+        return out;
+      }
+      if (parts.length !== 2) {
+        out.push({ level: "bad", text: "Scripts have 2 elements separated by an underscore (" + CODE + "_description." + ext + "), found " + parts.length + "." });
+        return out;
+      }
+    } else if (parts.length !== 3) {
       out.push({ level: "bad", text: "Expected 3 elements separated by underscores (" + CODE + "_description_vNN), found " + parts.length + "." });
       return out;
     }
@@ -378,13 +389,15 @@
       if (n > 4) out.push({ level: "warn", text: "Description has " + n + " words. Try to keep it to 4 or fewer." });
       else out.push({ level: "ok", text: "Description: " + desc });
     }
-    if (!/^v\d{2}$/.test(ver)) out.push({ level: "bad", text: "Element 3 should be a version like v01 or v02 (two digits)." });
+    if (isScript) out.push({ level: "ok", text: "Script: no version number needed" });
+    else if (!/^v\d{2}$/.test(ver)) out.push({ level: "bad", text: "Element 3 should be a version like v01 or v02 (two digits)." });
     else out.push({ level: "ok", text: "Version: " + ver });
     // .R is conventionally written in capitals, so allow that one.
     if (!/^[a-z0-9]+$/.test(ext) && ext !== "R") out.push({ level: "bad", text: "The extension should be lowercase, e.g. .csv (only .R scripts are an exception)." });
     return out;
   }
   function isProblem(r) { return r.level !== "ok"; }
+  var SCRIPT_EXT = ["r", "rmd", "py", "ipynb", "sh", "sas", "do", "sps", "m", "jl"];
 
   var nameInput = document.getElementById("name-input");
   var nameFb = document.getElementById("name-feedback");
