@@ -55,7 +55,7 @@ BBWDP_project/
 
 ## Step 3: Rename the files
 
-Give at least **three files** a name that follows this convention:
+Give at least **three dataset or documentation files** a name that follows this convention:
 
 ```
 bbwdp_description_vNN.ext
