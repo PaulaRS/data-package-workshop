@@ -72,8 +72,10 @@ Elements are separated by underscores `_`. No spaces, no special characters. Kee
 `remove-duplicates.R`. The project code is already in the folder name. All other files get `v01`, since this is their
 first version.
 
-Raw data is your source of truth: keep it apart and never edit it, so you can always redo the processing.
-Some researchers even make the `raw` folder read-only when data creation/collection is finished.
+Raw data is your source of truth. By keeping it separate and never editing it, you can always reproduce your processing
+steps, for example by re-running `cleaning_script.R`. Some researchers make the `raw` folder read-only once data
+collection is complete and exclude processed data from the data package, since all processed outputs can be regenerated
+by re-running the scripts.
 
 <details>
 <summary>💡 Hint: Why is there no date in the name?</summary>
