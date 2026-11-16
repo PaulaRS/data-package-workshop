@@ -35,7 +35,7 @@ find their way around.**
 ## Step 1: Download and explore the files
 
 1. Download [BBWDP_data.zip](downloads/BBWDP_data.zip) and unzip it.
-2. Open the folder `BBWDP_data` and look at the eleven files without opening the files.
+2. Open the folder `BBWDP_data` and look at the eleven files without opening them.
 3. Which ones do you think are **raw data**, **processed data**, **documentation** or **code**? Discuss with your neighbor.
 4. Would a new colleague understand these names without help? What would you improve?
 
